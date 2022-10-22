@@ -1,0 +1,77 @@
+﻿@page "/Registration"
+
+    <div class="container-fluid">Registration form
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Type Login" @bind="Taked_Account.Login">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Type Name" @bind="Taked_Account.Name">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Type Surname" @bind="Taked_Account.SurName">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Type Email" @bind="Taked_Account.Email">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Type Password" @bind="password1">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Repeat Password" @bind="password2">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <button class="btn-success" @onclick="TryToRegistrate">Registrate</button>
+            </div>
+        </div>
+    </div>
+
+@code {
+    private Account Taked_Account = new Account();
+    private string password1 = "";
+    private string password2 = "";
+
+    private void RegNewAccount()
+    {
+        var client = new MongoClient("mongodb://localhost");
+        var database = client.GetDatabase("Accounts_Lib");
+        var accounts_lib = database.GetCollection<Account>("AccountsCollection");
+        accounts_lib.InsertOne(Taked_Account);
+    }
+
+    private void TryToRegistrate()
+    {
+        if (password1 == password2)
+        {
+            Taked_Account.Password = password1;
+            RegNewAccount();
+        }
+    }
+
+    private void AuthAccountByName(string login)
+    {
+        var client = new MongoClient("mongodb://localhost");
+        var database = client.GetDatabase("Accounts_Lib");
+        var accounts_lib = database.GetCollection<Account>("AccountsCollection");
+        var account = accounts_lib.Find(x => x.Login == login).FirstOrDefault();
+        Taked_Account = account;
+    }
+}

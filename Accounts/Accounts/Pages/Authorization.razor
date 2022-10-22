@@ -1,0 +1,66 @@
+﻿
+
+@page "/Authorization"
+@inject NavigationManager NavigateToMain
+
+<div class="container-fluid">Authorization form
+        <br />
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Type Login" @bind="login">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <input class="form-control" placeholder="Type Password" @bind="password">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <button class="btn-success" @onclick="Authorizate">Authorizate</button>
+            </div>
+        </div>
+        <br />
+        <br />
+    </div>
+
+@code {
+    private Account Taked_Account;
+
+    private string login;
+    private string password;
+
+    private bool TryToAuthorizate()
+    {
+        Taked_Account = null;
+        var client = new MongoClient("mongodb://localhost");
+        var database = client.GetDatabase("Accounts_Lib");
+        var accounts_lib = database.GetCollection<Account>("AccountsCollection");
+        Taked_Account = accounts_lib.Find(x => x.Login == login).FirstOrDefault();
+
+        bool IsRight = false;
+        if (Taked_Account.Password == password)
+        {
+            IsRight = true;
+        }
+        else if (Taked_Account == null)
+        {
+            Console.WriteLine("Данный аккаунт не был зарегистрирован");
+        }
+        return IsRight;
+    }
+
+    private void Authorizate()
+    {
+        bool answer = false;
+        answer = TryToAuthorizate();
+        if (answer == true)
+        {
+            
+        }
+        
+    }
+
+}

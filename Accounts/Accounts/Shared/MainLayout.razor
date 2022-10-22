@@ -1,0 +1,62 @@
+﻿@inherits LayoutComponentBase
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+
+<PageTitle>Accounts</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="raw">
+            <div class="row"  align="right">
+                <div>@Name</div>
+            </div>
+            <div class="row"  align="right">
+                <div>@Surname</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col" align="right">
+                <button >Здесь мог быть неинвалидный код</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button @onclick="NavigateToRegistrate">Sign Up</button>
+            </div>
+            <div class="col">
+                <button @onclick="NavigateToAuthorizate">Sign In</button>
+            </div>
+        </div>
+
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code 
+{
+    [Parameter]
+    public string taked_login { get; set; }
+
+    public Account Taked_Account = new Account();
+
+    private string Name = "Name";
+    private string Surname = "Surname";
+
+    private void NavigateToRegistrate()
+    {
+        Navigation.NavigateTo("/Registration");
+    }
+    
+    private void NavigateToAuthorizate()
+    {
+        Navigation.NavigateTo("/Authorization");
+    }
+}
